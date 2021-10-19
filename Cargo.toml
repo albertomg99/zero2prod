@@ -8,6 +8,10 @@ edition = "2018"
 [lib]
 path = "src/lib.rs"
 
+[[bin]]
+path = "src/main.rs"
+name = "zero2prod"
+
 [dependencies]
 actix-web = "4.0.0-beta.9"
 actix-http = "3.0.0-beta.10"
