@@ -23,12 +23,15 @@ DB_NAME="${POSTGRES_DB:=newsletter}"
 # Check if a custom port has been set, otherwise default to '5432'
 DB_PORT="${POSTGRES_PORT:=5432}"
 # Launch postgres using Docker
-docker run \
-    -e POSTGRES_USER=${DB_USER} \
-    -e POSTGRES_PASSWORD=${DB_PASSWORD} \
-    -e POSTGRES_DB=${DB_NAME} \
-    -p "${DB_PORT}":5432 -v /home/alberto/zero2prod/data:/var/lib/postgresql/data \
-    -d postgres:alpine postgres -N 1000
+if [[ -z "${SKIP_DOCKER}" ]]
+then
+    docker run \
+        -e POSTGRES_USER=${DB_USER} \
+        -e POSTGRES_PASSWORD=${DB_PASSWORD} \
+        -e POSTGRES_DB=${DB_NAME} \
+        -p "${DB_PORT}":5432 -v /home/alberto/zero2prod/data:/var/lib/postgresql/data \
+        -d postgres:alpine postgres -N 1000
+fi        
 # ^ Increased maximum number of connections for testing purposes
 #-v /home/alberto/zero2prod/data:/var/lib/postgresql/data \
 
@@ -42,3 +45,6 @@ done
 
 export DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}
 sqlx database create
+
+sqlx migrate run
+>&2 echo "Postgres has been migrated, ready to go!"
