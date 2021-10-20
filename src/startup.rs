@@ -7,11 +7,14 @@ use std::net::TcpListener;
 //pub async fn run() -> std::io::Result<()> {
 //pub fn run() -> Result<Server, std::io::Error> {
 pub fn run(listener: TcpListener, connection: PgConnection) -> Result<Server, std::io::Error> {
-    let server = HttpServer::new(|| {
+    // Wrap the connection in a smart pointer
+    let connection = web::Data::new(connection);
+    // Capture `connection` from the surrounding environment
+    let server = HttpServer::new(move || {
         App::new()
             .route("/health_check", web::get().to(health_check))
             .route("/subscriptions", web::post().to(subscribe))
-            .app_data(connection)
+            .app_data(connection.clone())
     })
     .listen(listener)?
     .run();
