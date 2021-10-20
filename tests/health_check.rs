@@ -12,7 +12,7 @@
 #[actix_rt::test]
 async fn health_check_works() {
     //Arrange
-    spawn_app().await.expect("Failed to spawn our app");
+    spawn_app();
 
     // We need to bring in `reqwest`
     // to perform HTTP requests against our application.
@@ -35,7 +35,7 @@ async fn health_check_works() {
 
 // Launch our application in the background ~somehow~
 fn spawn_app() {
-    let server = zero2prod::run().expect("Failed to bind address");
+    let server = zero2prod::run("127.0.0.1:8080").expect("Failed to bind address");
 
     let _ = tokio::spawn(server);
 }
