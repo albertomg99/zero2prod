@@ -13,3 +13,12 @@ pub struct DatabaseSettings {
     pub host: String,
     pub database_name: String,
 }
+
+pub fn get_configuration() -> Result<Settings, config::ConfigError> {
+    //Initialise our configuration reader
+    let mut settings = config::Config::default();
+
+    settings.merge(config::File::with_name("configuration"))?;
+
+    settings.try_into()
+}
