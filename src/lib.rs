@@ -6,9 +6,11 @@ async fn health_check() -> impl Responder {
 }
 
 //pub async fn run() -> std::io::Result<()> {
+//pub fn run() -> Result<Server, std::io::Error> {
 pub fn run() -> Result<Server, std::io::Error> {
-    HttpServer::new(|| App::new().route("/health_check", web::get().to(health_check)))
+    let server = HttpServer::new(|| App::new().route("/health_check", web::get().to(health_check)))
         .bind(("127.0.0.1", 8080))?
         .run();
     // .await
+    Ok(server)
 }
