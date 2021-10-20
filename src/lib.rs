@@ -1,6 +1,5 @@
 use actix_web::dev::Server;
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
-use serde;
 use std::net::TcpListener;
 
 #[derive(serde::Deserialize)]
@@ -13,7 +12,7 @@ async fn health_check() -> impl Responder {
     HttpResponse::Ok().finish()
 }
 
-async fn subscribe() -> impl Responder {
+async fn subscribe(_form: web::Form<FormData>) -> impl Responder {
     HttpResponse::Ok().finish()
 }
 
