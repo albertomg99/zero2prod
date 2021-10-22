@@ -1,6 +1,7 @@
 use actix_web::{web, HttpResponse, Responder};
 use chrono::Utc;
 use sqlx::PgPool;
+use tracing_futures::Instrument;
 use uuid::Uuid;
 #[derive(serde::Deserialize)]
 pub struct FormData {
@@ -10,14 +11,22 @@ pub struct FormData {
 
 pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> impl Responder {
     let request_id = Uuid::new_v4();
+    // Spans, like logs, have an associated level
+    // `info_span` creates a span at the info-level
     let request_span = tracing::info_span!(
-        r#"Adding a new subscriber."#,
+        "Adding a new subscriber.",
         %request_id,
-        subscriber_email= %form.email, 
-        subscriber_name=%form.name);
-
+        subscriber_email = %form.email,
+        subscriber_name= %form.name
+    );
+    // Using `enter` in an async function is a recipe for disaster!
+    // Bear with me for now, but don't do this at home.
+    // See the following section on `tracing-futures`
     let _request_span_guard = request_span.enter();
-
+    // We do not call `.enter` on query_span!
+    // `.instrument` takes care of it at the right moments
+    // in the query future lifetime
+    let query_span = tracing::info_span!("Saving new subscriber details in the database");
     tracing::info!(
         "RID:{}> Adding '{}' '{}' as a new subscriber.",
         request_id,
@@ -37,6 +46,7 @@ pub async fn subscribe(form: web::Form<FormData>, pool: web::Data<PgPool>) -> im
         Utc::now()
     )
     .execute(pool.as_ref())
+    .instrument(query_span)
     .await
     {
         Ok(_) => {
