@@ -1,15 +1,16 @@
 //! src/main.rs
-//use env_logger::Env;
 use sqlx::PgPool;
-use std::{env, net::TcpListener};
+use std::net::TcpListener;
 use tracing::subscriber::set_global_default;
 use tracing_bunyan_formatter::{BunyanFormattingLayer, JsonStorageLayer};
+use tracing_log::LogTracer;
 use tracing_subscriber::{layer::SubscriberExt, EnvFilter, Registry};
 use zero2prod::{configuration::get_configuration, startup::run};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    // env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
+    // Redirect all `log`'s events to our subscriber
+    LogTracer::init().expect("Failed to set logger");
 
     // We are falling back to printing all spans at info-level or above
     // if the RUST_LOG environment variable has not been set.
