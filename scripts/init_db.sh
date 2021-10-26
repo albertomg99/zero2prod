@@ -29,7 +29,7 @@ then
         -e POSTGRES_USER=${DB_USER} \
         -e POSTGRES_PASSWORD=${DB_PASSWORD} \
         -e POSTGRES_DB=${DB_NAME} \
-        -p "${DB_PORT}":5432 -v /home/alberto/zero2prod/data:/var/lib/postgresql/data \
+        -p "${DB_PORT}":5432 -v /home/alberto/postgredata:/var/lib/postgresql/data \
         -d postgres:alpine postgres -N 1000
 fi        
 # ^ Increased maximum number of connections for testing purposes
