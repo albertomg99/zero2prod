@@ -1,4 +1,4 @@
-FROM rust:1.53.0-alpine
+FROM rust:1.56.0-slim
 WORKDIR /app
 COPY . .
 ENV SQLX_OFFLINE true
