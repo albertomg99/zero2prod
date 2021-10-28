@@ -7,3 +7,9 @@ database:
   username: "postgres"
   password: "password"
   database_name: "newsletter"
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  username: "root"
+  password: "andimesa"
+  database_name: "gala"  

@@ -31,6 +31,7 @@ impl TryFrom<String> for Environment {
 #[derive(serde::Deserialize)]
 pub struct Settings {
     pub database: DatabaseSettings,
+    pub mysql: DatabaseSettings,
     pub application: ApplicationSettings,
 }
 
@@ -53,6 +54,13 @@ impl DatabaseSettings {
     pub fn connection_string(&self) -> String {
         format!(
             "postgres://{}:{}@{}:{}/{}",
+            self.username, self.password, self.host, self.port, self.database_name
+        )
+    }
+
+    pub fn connection_string_mysql(&self) -> String {
+        format!(
+            "mysql://{}:{}@{}:{}/{}",
             self.username, self.password, self.host, self.port, self.database_name
         )
     }

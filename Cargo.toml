@@ -35,6 +35,7 @@ features = [
     "runtime-actix-rustls",
     "macros",
     "postgres",
+    "mysql",
     "uuid",
     "chrono",
     "migrate",
