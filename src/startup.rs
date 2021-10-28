@@ -14,6 +14,7 @@ pub fn run(
 ) -> Result<Server, std::io::Error> {
     // Wrap the connection in a smart pointer
     let db_pool = web::Data::new(db_pool);
+    let my_pool = web::Data::new(my_pool);
     // Capture `connection` from the surrounding environment
     let server = HttpServer::new(move || {
         App::new()

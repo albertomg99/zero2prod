@@ -1,7 +1,7 @@
 //! tests/health_check.rs
 
 use once_cell::sync::Lazy;
-use sqlx::{Connection, Executor, MySqlConnection, MySqlPool, PgConnection, PgPool};
+use sqlx::{Connection, Executor, MySqlPool, PgConnection, PgPool};
 use std::net::TcpListener;
 use uuid::Uuid;
 use zero2prod::configuration::{get_configuration, DatabaseSettings};
