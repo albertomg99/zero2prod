@@ -1,1 +1,5 @@
-data
+target/
+test/
+Dockerfile
+scripts/
+migrations/
