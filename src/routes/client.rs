@@ -9,7 +9,7 @@ pub struct FormData {
 }
 
 #[tracing::instrument(
-    name = "Adding a new subscriber",
+    name = "Adding a new client",
     skip(form, pool),
     fields(subscriber_email = %form.email, subscriber_name = %form.name)
 )]
@@ -24,14 +24,14 @@ pub async fn nou_client(form: web::Form<FormData>, pool: web::Data<MySqlPool>) -
 #[tracing::instrument(name = "Saving new client to DB", skip(form, pool))]
 
 pub async fn insert_client(pool: &MySqlPool, form: &FormData) -> Result<(), sqlx::Error> {
-    sqlx::query!(
+    sqlx::query(
         r#"INSERT INTO subscriptions (id, email, name, subscribed_at)
-                    VALUES ($1, $2, $3, $4)"#,
-        Uuid::new_v4(),
-        form.email,
-        form.name,
-        Utc::now()
+                    VALUES (?, ?, ?, ?)"#,
     )
+    .bind(Uuid::new_v4())
+    .bind(form.email)
+    .bind(form.name)
+    .bind(Utc::now())
     .execute(pool)
     .await
     .map_err(|e| {
