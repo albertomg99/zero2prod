@@ -29,8 +29,8 @@ pub async fn insert_client(pool: &MySqlPool, form: &FormData) -> Result<(), sqlx
                     VALUES (?, ?, ?, ?)"#,
     )
     .bind(Uuid::new_v4())
-    .bind(form.email)
-    .bind(form.name)
+    .bind(form.email.clone())
+    .bind(form.name.clone())
     .bind(Utc::now())
     .execute(pool)
     .await
