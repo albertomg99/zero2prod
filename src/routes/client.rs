@@ -61,11 +61,11 @@ pub async fn llista_client(
 }
 
 pub async fn consulta_client(pool: &MySqlPool, codi_client: &String) -> Result<(), sqlx::Error> {
-    let client = sqlx::query_as(llista_client,
+    let client = sqlx::query_as::<_,Client>(        
         r#"SELECT Codiclient, Nom, Cognom1, Cognom2, Telefon1 FROM clients.ClientsDades WHERE Codiclient = ?"#,
     )
     .bind(codi_client)
-    .execute(pool);
+    .fetch(pool);
 
     Ok(())
 }
